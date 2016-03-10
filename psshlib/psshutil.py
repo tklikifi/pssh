@@ -89,7 +89,6 @@ def parse_host(host, default_user=None, default_port=None):
 
     Returns a (host, port, user) triple.
     """
-    # TODO: when we stop supporting Python 2.4, switch to using str.partition.
     user = default_user
     port = default_port
     if '@' in host:

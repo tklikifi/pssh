@@ -1,7 +1,7 @@
 Installing PSSH
 ===============
 
-PSSH is supported on Python 2.4 and greater (including Python 3.1 and
+PSSH is supported on Python 2.5 and greater (including Python 3.1 and
 greater).
 
 Install Python and setuptools, and then run:
