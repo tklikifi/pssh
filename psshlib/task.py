@@ -140,7 +140,9 @@ class Task(object):
 
     def running(self):
         """Finds if the process has terminated and saves the return code."""
-        if self.stdin or self.stdout or self.stderr:
+        # don't check self.stderr; it's still open when ControlPersist=yes is
+        # set for ssh
+        if self.stdin or self.stdout:
             return True
         if self.proc:
             self.exitstatus = self.proc.poll()
