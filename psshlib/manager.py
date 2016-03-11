@@ -96,9 +96,6 @@ class Manager(object):
         signal.signal(signal.SIGCHLD, signal.SIG_DFL)
 
     def set_sigchld_handler(self):
-        # TODO: find out whether set_wakeup_fd still works if the default
-        # signal handler is used (I'm pretty sure it doesn't work if the
-        # signal is ignored).
         signal.signal(signal.SIGCHLD, self.handle_sigchld)
         # This should keep reads and writes from getting EINTR.
         if hasattr(signal, 'siginterrupt'):
