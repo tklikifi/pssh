@@ -348,13 +348,17 @@ class Writer(threading.Thread):
                 return
 
             if data == self.OPEN:
-                self.files[filename] = open(filename, 'wb', buffering=1)
-                psshutil.set_cloexec(self.files[filename])
+                self.files[filename] = None
             else:
                 dest = self.files[filename]
                 if data == self.EOF:
-                    dest.close()
+                    if dest is not None:
+                        dest.close()
                 else:
+                    if dest is None:
+                        dest = self.files[filename] = open(
+                            filename, 'wb', buffering=1)
+                        psshutil.set_cloexec(dest)
                     dest.write(data)
                     dest.flush()
 
