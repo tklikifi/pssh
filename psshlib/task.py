@@ -77,7 +77,7 @@ class Task(object):
             self.outfile, self.errfile = writer.open_files(self.pretty_host)
 
         # Set up the environment.
-        environ = dict(os.environ)
+        environ = os.environ.copy()
         environ['PSSH_NODENUM'] = str(nodenum)
         environ['PSSH_HOST'] = self.host
         # Disable the GNOME pop-up password dialog and allow ssh to use
