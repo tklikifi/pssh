@@ -2,6 +2,7 @@
 # Copyright (c) 2003-2008, Brent N. Chun
 
 import fcntl
+import re
 import sys
 
 HOST_FORMAT = 'Host format is [user@]host[:port] [user]'
@@ -33,7 +34,8 @@ def read_host_file(path, default_user=None, default_port=None):
 
     hosts = []
     for line in lines:
-        # Skip blank lines or lines starting with #
+        # Skip blank lines, trailing comments, or lines starting with #
+        line = re.sub('#.*', '', line)
         line = line.strip()
         if not line or line.startswith('#'):
             continue
