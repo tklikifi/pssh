@@ -113,7 +113,7 @@ if __name__ == "__main__":
     remote = args[0]
     local = args[1]
     try:
-        hosts = psshutil.read_host_files(opts.host_files,
+        hosts = psshutil.read_host_files(opts.host_files, opts.host_glob,
             default_user=opts.user)
     except IOError:
         _, e, _ = sys.exc_info()

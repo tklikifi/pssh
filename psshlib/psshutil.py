@@ -4,11 +4,12 @@
 import fcntl
 import re
 import sys
+import fnmatch
 
 HOST_FORMAT = 'Host format is [user@]host[:port] [user]'
 
 
-def read_host_files(paths, default_user=None, default_port=None):
+def read_host_files(paths, host_glob, default_user=None, default_port=None):
     """Reads the given host files.
 
     Returns a list of (host, port, user) triples.
@@ -16,11 +17,11 @@ def read_host_files(paths, default_user=None, default_port=None):
     hosts = []
     if paths:
         for path in paths:
-            hosts.extend(read_host_file(path, default_user=default_user))
+            hosts.extend(read_host_file(path, host_glob, default_user=default_user))
     return hosts
 
 
-def read_host_file(path, default_user=None, default_port=None):
+def read_host_file(path, host_glob, default_user=None, default_port=None):
     """Reads the given host file.
 
     Lines are of the form: host[:port] [login].
@@ -39,8 +40,8 @@ def read_host_file(path, default_user=None, default_port=None):
         line = line.strip()
         if not line or line.startswith('#'):
             continue
-        host, port, user = parse_host_entry(line, default_user, default_port)
-        if host:
+        host, port, user = parse_host_entry(line, default_user, default_port, host_glob)
+        if host and (not host_glob or fnmatch.fnmatch(host, host_glob)):
             hosts.append((host, port, user))
     return hosts
 

@@ -105,7 +105,7 @@ if __name__ == "__main__":
     opts, args = parse_args()
     cmdline = " ".join(args)
     try:
-        hosts = psshutil.read_host_files(opts.host_files,
+        hosts = psshutil.read_host_files(opts.host_files, opts.host_glob,
             default_user=opts.user)
     except IOError:
         _, e, _ = sys.exc_info()
