@@ -12,7 +12,6 @@ outdir/<node>/local.  This program also uses the -q (quiet) and -C
 """
 
 import os
-import re
 import sys
 
 parent, bindir = os.path.split(os.path.dirname(os.path.abspath(sys.argv[0])))
