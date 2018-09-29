@@ -1,3 +1,5 @@
+# Copyright (c) 2018, Jeffrey Lund
+
 import itertools
 import os
 

@@ -1,3 +1,4 @@
+# Copyright (c) 2018, Jeffrey Lund
 # Copyright (c) 2009-2012, Andrew McNabb
 
 from errno import EINTR
