@@ -1,3 +1,9 @@
+2017-09-14 依云 <lilydjwg at gmail.com>
+	* Version 2.3.2
+	  - Added PSSH_NUMNODES enviroment variable  Thanks to jefflund
+	    for the patch.
+	  - Remove support for Python 2.4
+	  - Many small fixes and code cleanup
 2012-02-02 Andrew McNabb <amcnabb at mcnabbs.org>
 	* Version 2.3.1
 	  - Fixed a problem where man pages were omitted from the tar file.
