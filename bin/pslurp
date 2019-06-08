@@ -65,17 +65,17 @@ def do_pslurp(hosts, remote, local, opts):
         os.makedirs(opts.errdir)
     for host, port, user in hosts:
         if opts.localdir:
-            dirname = "%s/%s" % (opts.localdir, host)
+            dirname = "%s/%s:%s" % (opts.localdir, host, port)
         else:
-            dirname = host
+            dirname = '%s:%s' % (host, port)
         if not os.path.exists(dirname):
             os.mkdir(dirname)
     manager = Manager(opts)
     for host, port, user in hosts:
         if opts.localdir:
-            localpath = "%s/%s/%s" % (opts.localdir, host, local)
+            localpath = "%s/%s:%s/%s" % (opts.localdir, host, port, local)
         else:
-            localpath = "%s/%s" % (host, local)
+            localpath = "%s:%s/%s" % (host, port, local)
         cmd = ['scp', '-qC']
         if opts.options:
             for opt in opts.options:
