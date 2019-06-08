@@ -1,3 +1,4 @@
+# Copyright (c) 2018, Jeffrey Lund
 # Copyright (c) 2009-2012, Andrew McNabb
 
 from errno import EINTR
@@ -69,7 +70,7 @@ class Task(object):
         except AttributeError:
             self.inline_stdout = False
 
-    def start(self, nodenum, iomap, writer, askpass_socket=None):
+    def start(self, nodenum, numnodes, iomap, writer, askpass_socket=None):
         """Starts the process and registers files with the IOMap."""
         self.writer = writer
 
@@ -79,6 +80,7 @@ class Task(object):
         # Set up the environment.
         environ = os.environ.copy()
         environ['PSSH_NODENUM'] = str(nodenum)
+        environ['PSSH_NUMNODES'] = str(numnodes)
         environ['PSSH_HOST'] = self.host
         # Disable the GNOME pop-up password dialog and allow ssh to use
         # askpass.py to get a provided password.  If the module file is

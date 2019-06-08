@@ -42,7 +42,8 @@ class Manager(object):
         self.errdir = opts.errdir
         self.iomap = make_iomap()
 
-        self.taskcount = 0
+        self.next_nodenum = 0
+        self.numnodes = 0
         self.tasks = []
         self.running = []
         self.done = []
@@ -113,6 +114,7 @@ class Manager(object):
     def add_task(self, task):
         """Adds a Task to be processed with run()."""
         self.tasks.append(task)
+        self.numnodes += 1
 
     def update_tasks(self, writer):
         """Reaps tasks and starts as many new ones as allowed."""
@@ -137,8 +139,8 @@ class Manager(object):
         while 0 < len(self.tasks) and len(self.running) < self.limit:
             task = self.tasks.pop(0)
             self.running.append(task)
-            task.start(self.taskcount, self.iomap, writer, self.askpass_socket)
-            self.taskcount += 1
+            task.start(self.next_nodenum, self.numnodes, self.iomap, writer, self.askpass_socket)
+            self.next_nodenum += 1
 
     def reap_tasks(self):
         """Checks to see if any tasks have terminated.
