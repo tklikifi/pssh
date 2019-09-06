@@ -35,10 +35,11 @@ def read_host_file(path, host_glob, default_user=None, default_port=None):
 
     hosts = []
     for line in lines:
-        # Skip blank lines, trailing comments, or lines starting with #
+        # remove trailing comments
         line = re.sub('#.*', '', line)
         line = line.strip()
-        if not line or line.startswith('#'):
+        # skip blank lines (or lines with only comments)
+        if not line:
             continue
         host, port, user = parse_host_entry(line, default_user, default_port, host_glob)
         if host and (not host_glob or fnmatch.fnmatch(host, host_glob)):
