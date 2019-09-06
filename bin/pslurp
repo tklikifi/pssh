@@ -98,7 +98,7 @@ def do_pslurp(hosts, remote, local, opts):
     except FatalError:
         sys.exit(1)
 
-    if min(statuses) < 0:
+    if statuses and min(statuses) < 0:
         # At least one process was killed.
         sys.exit(3)
     for status in statuses:
