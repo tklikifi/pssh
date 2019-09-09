@@ -12,6 +12,8 @@ pssh \(em parallel ssh program
 .IR hosts_file ]
 .RB [ \-H
 .RI [ user @] host [: port ]]
+.RB [ \-g
+.IR pattern ]
 .RB [ \-l
 .IR user ]
 .RB [ \-p
@@ -36,6 +38,8 @@ pssh \(em parallel ssh program
 .IR hosts_file ]
 .RB [ \-H
 .RI [ user @] host [: port ]]
+.RB [ \-g
+.IR pattern ]
 .RB [ \-l
 .IR user ]
 .RB [ \-p
@@ -120,6 +124,16 @@ Add the given host strings to the list of hosts.  This option may be given
 multiple times, and may be used in conjunction with the
 .B \-h
 option.
+
+.TP
+.BI \-g " pattern"
+.PD 0
+.TP
+.BI \-\-host\-glob " pattern"
+Filter hosts with glob pattern
+.IR pattern .
+This uses the same syntax as shell globs. Make sure to quote the pattern to
+prevent shell from expanding it. Examples are "*web*" and "company_*".
 
 .TP
 .BI \-l " user"
