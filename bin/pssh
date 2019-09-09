@@ -93,7 +93,7 @@ def do_pssh(hosts, cmdline, opts):
     except FatalError:
         sys.exit(1)
 
-    if statuses and min(statuses) < 0:
+    if any(x < 0 for x in statuses if x):
         # At least one process was killed.
         sys.exit(3)
     if any(x == 255 for x in statuses):
