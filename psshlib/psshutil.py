@@ -41,7 +41,7 @@ def read_host_file(path, host_glob, default_user=None, default_port=None):
         # skip blank lines (or lines with only comments)
         if not line:
             continue
-        host, port, user = parse_host_entry(line, default_user, default_port, host_glob)
+        host, port, user = parse_host_entry(line, default_user, default_port)
         if host and (not host_glob or fnmatch.fnmatch(host, host_glob)):
             hosts.append((host, port, user))
     return hosts
