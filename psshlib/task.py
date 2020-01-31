@@ -196,8 +196,9 @@ class Task(object):
                 if self.outfile:
                     self.writer.write(self.outfile, buf)
                 if self.print_out:
-                    sys.stdout.write('%s: %s' % (self.host, buf))
-                    if buf[-1] != '\n':
+                    text = buf.decode(errors='replace')
+                    sys.stdout.write('%s: %s' % (self.host, text))
+                    if text[-1] != '\n':
                         sys.stdout.write('\n')
             else:
                 self.close_stdout(iomap)
