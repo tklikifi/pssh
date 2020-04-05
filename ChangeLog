@@ -1,3 +1,7 @@
+2020-04-05 依云 <lilydjwg at gmail.com>
+	* Version 2.3.4
+	  - Add -g/--host-glob option, which accepts a glob to match in hosts
+	  - Fixes
 2018-09-29 Jeffrey Lund <jefflund at gmail.com>
 	* Version 2.3.3
 	  - Added PSSH_NUMNODES enviroment variable
