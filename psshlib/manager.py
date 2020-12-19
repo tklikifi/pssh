@@ -36,6 +36,7 @@ class Manager(object):
         self.askpass = opts.askpass
         self.outdir = opts.outdir
         self.errdir = opts.errdir
+        self.fileappend = opts.fileappend
         self.iomap = make_iomap()
 
         self.next_nodenum = 0
@@ -50,7 +51,7 @@ class Manager(object):
         """Processes tasks previously added with add_task."""
         try:
             if self.outdir or self.errdir:
-                writer = Writer(self.outdir, self.errdir)
+                writer = Writer(self.outdir, self.errdir, self.fileappend)
                 writer.start()
             else:
                 writer = None
@@ -314,13 +315,18 @@ class Writer(threading.Thread):
     EOF = object()
     ABORT = object()
 
-    def __init__(self, outdir, errdir):
+    def __init__(self, outdir, errdir, fileappend):
         threading.Thread.__init__(self)
         # A daemon thread automatically dies if the program is terminated.
         self.setDaemon(True)
         self.queue = queue.Queue()
         self.outdir = outdir
         self.errdir = errdir
+
+        if fileappend:
+            self.filewritemode = 'ab'
+        else:
+            self.filewritemode = 'wb'
 
         self.host_counts = {}
         self.files = {}
@@ -341,7 +347,7 @@ class Writer(threading.Thread):
                 else:
                     if dest is None:
                         dest = self.files[filename] = open(
-                            filename, 'wb', buffering=1)
+                            filename, self.filewritemode, buffering=1)
                         psshutil.set_cloexec(dest)
                     dest.write(data)
                     dest.flush()
