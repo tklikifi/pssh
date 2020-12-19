@@ -347,10 +347,9 @@ class Writer(threading.Thread):
                 else:
                     if dest is None:
                         dest = self.files[filename] = open(
-                            filename, self.filewritemode, buffering=1)
+                            filename, self.filewritemode, buffering=0)
                         psshutil.set_cloexec(dest)
                     dest.write(data)
-                    dest.flush()
 
     def open_files(self, host):
         """Called from another thread to create files for stdout and stderr.
