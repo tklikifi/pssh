@@ -98,7 +98,7 @@ class Task(object):
         # Create the subprocess.  Since we carefully call set_cloexec() on
         # all open files, we specify close_fds=False.
         self.proc = Popen(self.cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE,
-                close_fds=False, preexec_fn=os.setsid, env=environ)
+                          close_fds=False, preexec_fn=os.setsid, env=environ)
         self.timestamp = time.time()
         if self.inputbuffer:
             self.stdin = self.proc.stdin
@@ -226,6 +226,11 @@ class Task(object):
                     self.errorbuffer += buf
                 if self.errfile:
                     self.writer.write(self.errfile, buf)
+                if self.print_out:
+                    text = buf.decode(errors='replace')
+                    sys.stderr.write('%s: %s' % (self.host, text))
+                    if text[-1] != '\n':
+                        sys.stderr.write('\n')
             else:
                 self.close_stderr(iomap)
         except (OSError, IOError):
