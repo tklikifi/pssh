@@ -318,7 +318,7 @@ class Writer(threading.Thread):
     def __init__(self, outdir, errdir, fileappend):
         threading.Thread.__init__(self)
         # A daemon thread automatically dies if the program is terminated.
-        self.setDaemon(True)
+        self.daemon = True
         self.queue = queue.Queue()
         self.outdir = outdir
         self.errdir = errdir
