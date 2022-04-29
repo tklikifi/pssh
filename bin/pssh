@@ -41,6 +41,8 @@ def option_parser():
             help='read from standard input and send as input to ssh')
     parser.add_option('-P', '--print', dest='print_out', action='store_true',
             help='print output as we get it')
+    parser.add_option('--no-headers', dest='noheaders', action='store_true',
+            help="Don't print headers with --inline or --inline-stdout")
 
     return parser
 

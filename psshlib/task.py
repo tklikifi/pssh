@@ -69,6 +69,10 @@ class Task(object):
             self.inline_stdout = bool(opts.inline_stdout)
         except AttributeError:
             self.inline_stdout = False
+        try:
+            self.noheaders = bool(opts.noheaders)
+        except AttributeError:
+            self.noheaders = False
 
     def start(self, nodenum, numnodes, iomap, writer, askpass_socket=None):
         """Starts the process and registers files with the IOMap."""
@@ -260,24 +264,27 @@ class Task(object):
 
     def report(self, n):
         """Pretty prints a status report after the Task completes."""
-        error = ', '.join(self.failures)
-        tstamp = time.asctime().split()[3] # Current time
-        if color.has_colors(sys.stdout):
-            progress = color.c("[%s]" % color.B(n))
-            success = color.g("[%s]" % color.B("SUCCESS"))
-            failure = color.r("[%s]" % color.B("FAILURE"))
-            stderr = color.r("Stderr: ")
-            error = color.r(color.B(error))
+        if not self.noheaders:
+            error = ', '.join(self.failures)
+            tstamp = time.asctime().split()[3] # Current time
+            if color.has_colors(sys.stdout):
+                progress = color.c("[%s]" % color.B(n))
+                success = color.g("[%s]" % color.B("SUCCESS"))
+                failure = color.r("[%s]" % color.B("FAILURE"))
+                stderr = color.r("Stderr: ")
+                error = color.r(color.B(error))
+            else:
+                progress = "[%s]" % n
+                success = "[SUCCESS]"
+                failure = "[FAILURE]"
+                stderr = "Stderr: "
+            host = self.pretty_host
+            if self.failures:
+                print(' '.join((progress, tstamp, failure, host, error)))
+            else:
+                print(' '.join((progress, tstamp, success, host)))
         else:
-            progress = "[%s]" % n
-            success = "[SUCCESS]"
-            failure = "[FAILURE]"
-            stderr = "Stderr: "
-        host = self.pretty_host
-        if self.failures:
-            print(' '.join((progress, tstamp, failure, host, error)))
-        else:
-            print(' '.join((progress, tstamp, success, host)))
+            stderr = ''
         # NOTE: The extra flushes are to ensure that the data is output in
         # the correct order with the C implementation of io.
         if self.outputbuffer:
