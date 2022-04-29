@@ -38,6 +38,8 @@ def option_parser():
             action='store', help='extra arguments for ssh')
     parser.add_option('-d', '--download', dest='download', action='store_true',
             help='download files instead, reversing local and remote (OPTIONAL)')
+    parser.add_option('-i', '--inline', dest='inline', action='store_true',
+            help='inline aggregated output and error for each server')
 
     return parser
 
