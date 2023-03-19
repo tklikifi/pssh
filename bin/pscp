@@ -4,6 +4,8 @@
 # Copyright (c) 2009-2012, Andrew McNabb
 # Copyright (c) 2003-2008, Brent N. Chun
 
+# Extend to support download, Tommi Linnakangas
+
 """Parallel scp to the set of nodes in hosts.txt.
 
 For each node, we essentially do a scp [-r] local user@host:remote.  This
@@ -31,6 +33,10 @@ def option_parser():
 
     parser.add_option('-r', '--recursive', dest='recursive',
             action='store_true', help='recusively copy directories (OPTIONAL)')
+    parser.add_option('--download', dest='download',
+                      action='store_true',
+                      help='perform download instead of upload; files copied from hosts are '
+                           'store to directories with host name as the directory name')
 
     return parser
 
@@ -51,7 +57,7 @@ def parse_args():
 
     return opts, args
 
-def do_pscp(hosts, localargs, remote, opts):
+def do_pscp(hosts, localargs, remoteargs, opts):
     if opts.outdir and not os.path.exists(opts.outdir):
         os.makedirs(opts.outdir)
     if opts.errdir and not os.path.exists(opts.errdir):
@@ -68,11 +74,22 @@ def do_pscp(hosts, localargs, remote, opts):
             cmd.append('-r')
         if opts.extra:
             cmd.extend(opts.extra)
-        cmd.extend(localargs)
-        if user:
-            cmd.append('%s@%s:%s' % (user, host, remote))
+        if opts.download:
+            for remote in remoteargs:
+                if user:
+                    cmd.append('%s@%s:%s' % (user, host, remote))
+                else:
+                    cmd.append('%s:%s' % (host, remote))
+            localdir = os.path.join(localargs, host)
+            if not os.path.exists(localdir):
+                os.makedirs(localdir)
+            cmd.append(localdir)
         else:
-            cmd.append('%s:%s' % (host, remote))
+            cmd.extend(localargs)
+            if user:
+                cmd.append('%s@%s:%s' % (user, host, remoteargs))
+            else:
+                cmd.append('%s:%s' % (host, remoteargs))
         t = Task(host, port, user, cmd, opts)
         manager.add_task(t)
     try:
@@ -80,7 +97,7 @@ def do_pscp(hosts, localargs, remote, opts):
     except FatalError:
         sys.exit(1)
 
-    if statuses and min(statuses) < 0:
+    if statuses and min([status for status in statuses if isinstance(status, int)]) < 0:
         # At least one process was killed.
         sys.exit(3)
     for status in statuses:
@@ -89,8 +106,12 @@ def do_pscp(hosts, localargs, remote, opts):
 
 if __name__ == "__main__":
     opts, args = parse_args()
-    localargs = args[0:-1]
-    remote = args[-1]
+    if opts.download:
+        localargs = args[-1]
+        remote = args[0:-1]
+    else:
+        localargs = args[0:-1]
+        remote = args[-1]
     try:
         hosts = psshutil.read_host_files(opts.host_files, opts.host_glob,
             default_user=opts.user)
